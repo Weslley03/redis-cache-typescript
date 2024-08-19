@@ -1,20 +1,12 @@
-import express, { json, Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import { createClient } from 'redis';
+import { getAllProducts } from './src/getAllProducts'
 const app = express();
 const client = createClient();
 
 client.on('error', (error) => {
     console.error('houve um erro na conection REDIS: ', error)
 })
-
-async function getAllProducts(){
-  const time = Math.random() * 5000;
-  return new Promise((resolve)=> {
-    setTimeout(()=> {
-      resolve(['weslley', 'west', 'leay'])
-    }, time);
-  });
-};
 
 app.get('/', async (req: Request, res: Response) => {
   const productsInCache = await client.get('getAllProducts')
@@ -37,3 +29,5 @@ const startUp = async () => { //função de start-server
   };
 };
 startUp();
+
+export { app, client };
